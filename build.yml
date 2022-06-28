@@ -1,0 +1,31 @@
+---
+- name: new machine build
+  hosts: database
+  become: yes
+  become_user: root
+  become_method: sudo
+  gather_facts: true
+
+  tasks:
+  - name: install nano package
+    package:
+      name: nano
+      state: present
+
+  - name: create service user
+    user:
+      name: service
+      groups: wheel
+
+  - name: remove cloud-init centos file
+    file:
+      path: /etc/sudoers.d/90-cloud-init-users
+      state: absent
+
+  - name: register /home disk used space
+    shell: "df -h | grep /home | awk '{print $3}'"
+    register: home_used_space
+
+  - name: show /home/disk used space
+    debug:
+      msg: "{{ ansible_hostname }} is using {{ home_used_space.stdout }} on /home"

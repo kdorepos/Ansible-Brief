@@ -1,0 +1,10 @@
+[linux_servers:children]
+webserver
+database
+
+[webserver]
+saturn ansible_host=192.168.1.10 ansible_user=kdor
+neptune ansible_host=web2.local ansible_user=admin
+
+[database]
+192.168.1.[21:24] ansible_user=kdor
